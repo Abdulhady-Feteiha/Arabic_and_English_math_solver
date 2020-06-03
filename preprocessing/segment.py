@@ -5,7 +5,54 @@ import glob
 import os
 import numpy as np
 
-def segment(img_path,digital):
+def get_contours(image) :
+
+image = cv2.resize(image,(300,500), interpolation = cv2.INTER_AREA)
+cv2_imshow(image)
+# Save a copy of the original image,
+orig = image.copy()
+# Convert the from RGB to gray, and Blur the image
+grayImageBlur = cv2.blur(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY),(3,3))
+# Apply canny edge detector then find contours
+edges = cv2.Canny(grayImageBlur, 100, 300, 3)
+# Get the contours of the paper
+Contours = cv2.findContours(edges.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+Contours = imutils.grab_contours(Contours)
+Contours = sorted(Contours, key=cv2.contourArea, reverse=True)[:1]
+perimeter = cv2.arcLength(Contours[0], True)
+paper_borders = cv2.approxPolyDP(Contours[0], 0.02*perimeter, True)
+# cv2.drawContours(image, [paper_borders], -1, (0,255,0), 2)
+# Need to make sure the the formed contours are able to form a rectangle
+paper_sides = np.zeros((4,2),np.float32)
+if paper_borders.shape[0] == 4 :
+  paper_borders = paper_borders.reshape(4,2)
+  s = np.sum(paper_borders, axis=1)
+  paper_sides[0] = paper_borders[np.argmin(s)]
+  paper_sides[2] = paper_borders[np.argmax(s)]
+  diff = np.diff(paper_borders, axis=1)
+  paper_sides[1] = paper_borders[np.argmin(diff)]
+  paper_sides[3] = paper_borders[np.argmax(diff)]
+  (s_1, s_2, s_3, s_4) = paper_sides
+  width_1 = np.sqrt((s_1[0] - s_2[0])**2 + (s_1[1] - s_2[1])**2 )
+  width_2 = np.sqrt((s_4[0] - s_3[0])**2 + (s_4[1] - s_3[1])**2 )
+  maxWidth = max(int(width_1), int(width_2))
+  height_1 = np.sqrt((s_1[0] - s_4[0])**2 + (s_1[1] - s_4[1])**2 )
+  height_2 = np.sqrt((s_2[0] - s_3[0])**2 + (s_2[1] - s_3[1])**2 )
+  maxHeight = max(int(height_1), int(height_2))
+  dst = np.array([[0,0],[maxWidth-1, 0],[maxWidth-1, maxHeight-1],[0, maxHeight-1]],np.float32)
+  transformMatrix = cv2.getPerspectiveTransform(paper_sides, dst)
+  scan = cv2.warpPerspective(orig, transformMatrix, (maxWidth, maxHeight))
+  cv2_imshow(scan)
+  return scan
+else :
+  # More or less than 4 contours were detected, which means the results are inaccurate
+  # In this case, the user needs to retake the image
+  print('Unable to detect paper borders, please try to retake the image')
+  return 'Unable to detect paper borders'
+
+
+
+def segment(img_path,digital, scan):
     old_imgs = glob.glob(processed_path+'/*.png')
     if old_imgs:
         for old in  old_imgs:
@@ -32,6 +79,11 @@ def segment(img_path,digital):
             cv.imwrite(processed_path+'/img'+str(i)+".png",Digit) #save images
     if not digital:
         img = cv.imread(img_path)
+        if scan :
+          img = get_contours(img)
+          if type(img) == str :
+            message = 'Sorry, could not identify image borders, please try again.'
+            return message
         # img = cv.resize(img,(500,300), interpolation = cv.INTER_AREA)
         # Need to consider resizing all images to a fixed size
         img = cv.resize(img, (0,0), fx=0.5, fy=0.5)

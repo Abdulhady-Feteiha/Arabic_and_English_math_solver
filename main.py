@@ -1,7 +1,7 @@
 import optparse
 from app.helpers import build_recognizer,calculate
 import os
-from config import BASE_PATH
+from app.gui import GUI
 
 def get_options():
     opt_parser = optparse.OptionParser()
@@ -18,6 +18,5 @@ if __name__ == "__main__":
     if options.Train:
         build_recognizer()
     else:
-        file= os.path.join(BASE_PATH, r"app/dd.png")
-        model= os.path.join(BASE_PATH, r"train/en_model.h5")
-        print(calculate(file,model,digital=False))
+        GUI()
+

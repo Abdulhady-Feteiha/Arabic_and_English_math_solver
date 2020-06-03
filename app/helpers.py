@@ -24,13 +24,13 @@ def build_recognizer(BASE_PATH=BASE_PATH):
     en_model = train_model(X_train, Y_train,X_test, Y_test,en_model_path)
     return ar_model, en_model
 
-def calculate(img_path,model_path,digital,processed_path=processed_path):
-    segment(img_path,digital)
+def calculate(img_path,model_path,digital,processed_path=processed_path,scan=False):
+    message= segment(img_path,digital,scan)
     Digit_Recognizer_model = load_model(model_path)
     chars = predict(Digit_Recognizer_model,processed_path,digital)
     print(chars)
     result = operation(chars)
-    return result
+    return result,message
 
 def predict(Digit_Recognizer_model,processed_path,digital):
     imgs = sorted(glob.glob(processed_path+"/*.png"))

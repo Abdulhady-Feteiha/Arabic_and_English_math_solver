@@ -5,13 +5,16 @@ This is repo contains a keras model for recognizing Arabic and English digits al
 ehemayed@zewailcity.edu.eg 
 <br>
 
-In collabortion with Colleagues:
+Collaborators:
  <br>
  
 **Abdelrahman Ali Bedier**: s-abdelrahman.bedier@zewailcity.edu.eg 
  <br>
  
 **Shrouk Ahmed**: s-shroukwally@zewailcity.edu.eg 
+<br>
+
+**Abdulhady Ahmed Feteiha **: s-abdulhady@zewailcity.edu.eg 
 <br>
 
 ![ZC](ZC.png)

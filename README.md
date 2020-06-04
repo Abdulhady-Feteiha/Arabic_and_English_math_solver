@@ -14,7 +14,7 @@ Collaborators:
 **Shrouk Ahmed**: s-shroukwally@zewailcity.edu.eg 
 <br>
 
-**Abdulhady Ahmed Feteiha **: s-abdulhady@zewailcity.edu.eg 
+**Abdulhady Ahmed Feteiha**: s-abdulhady@zewailcity.edu.eg 
 <br>
 
 ![ZC](ZC.png)

@@ -7,7 +7,9 @@ import numpy as np
 
 def get_contours(image) :
 
-    image = cv.resize(image,(300,500), interpolation = cv.INTER_AREA)
+#    image = cv.resize(image,(300,500), interpolation = cv.INTER_AREA)
+    image = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
+
     cv_imshow(image)
     # Save a copy of the original image,
     orig = image.copy()

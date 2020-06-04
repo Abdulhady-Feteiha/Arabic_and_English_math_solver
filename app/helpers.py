@@ -6,6 +6,12 @@ from preprocessing.segment import segment
 import glob
 import numpy as np
 import os
+import re
+
+def atoi(text):
+    return int(text) if text.isdigit() else text
+def natural_keys(text):
+    return [ atoi(c) for c in re.split('(\d+)',text) ]
 
 def build_recognizer(BASE_PATH=BASE_PATH):
 
@@ -33,7 +39,8 @@ def calculate(img_path,model_path,digital,processed_path=processed_path,scan=Fal
     return result,message
 
 def predict(Digit_Recognizer_model,processed_path,digital):
-    imgs = sorted(glob.glob(processed_path+"/*.png"))
+    imgs = glob.glob(processed_path+"/*.png")
+    imgs.sort(key=natural_keys)
     predicted = []
     for img in imgs:
       test_img = process_image(img,digital)

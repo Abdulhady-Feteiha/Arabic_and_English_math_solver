@@ -4,11 +4,12 @@ from config import processed_path
 import glob
 import os
 import numpy as np
+import imutils
+
 
 def get_contours(image) :
 
-    image = cv.resize(image,(300,500), interpolation = cv.INTER_AREA)
-    cv_imshow(image)
+    image = cv.resize(image, (0,0), fx=0.5, fy=0.5)
     # Save a copy of the original image,
     orig = image.copy()
     # Convert the from RGB to gray, and Blur the image

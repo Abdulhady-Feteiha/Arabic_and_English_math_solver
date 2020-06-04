@@ -26,6 +26,7 @@ def GUI():
         elif var.get()=='Arabic':
             model= os.path.join(BASE_PATH, r"train/ar_model.h5")
         return model
+    
         
 
         
@@ -52,7 +53,8 @@ def GUI():
 
 
 
-        
+    ftypes = [('JPEG files', '*.jpeg'),('PNGs files', '*.png'), ('jpg files', '*.jpg'), ('All files', '*')]
+    
 
     def paint( event ):
        python_green = "#476042"
@@ -62,8 +64,7 @@ def GUI():
     def delete_paint(event):
         cv.delete(ALL)
     def fileDialog():
-            filename_uploaded = filedialog.askopenfilename(initialdir =  "/", title = "Select An Image", filetype =
-            (("PNGs files","*.png"),("all files","*.*")) )
+            filename_uploaded = filedialog.askopenfilename( title = "Select An cropped Image", filetype =ftypes,initialdir="/")
             dst=os.path.join(BASE_PATH, r"app/Images/Image.png")
             ImagePath=copy(filename_uploaded,dst)
             model=getmodel()
@@ -78,8 +79,7 @@ def GUI():
             
 
     def fileDialog2():
-            filename_uploaded = filedialog.askopenfilename(initialdir =  "/", title = "Select An Image", filetype =
-            (("PNGs files","*.png"),("all files","*.*")) )
+            filename_uploaded = filedialog.askopenfilename(title = "Select An uncropped Image", filetype =ftypes,initialdir="/")
             dst=os.path.join(BASE_PATH, r"app/Images/Image.png")
             ImagePath=copy(filename_uploaded,dst)
             model=getmodel()
